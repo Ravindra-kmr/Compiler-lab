@@ -1,0 +1,110 @@
+(*structure A = Absyn*)
+
+%%
+
+%term
+	EOF
+	|ID of string
+	|INT of int
+	|PLUS
+	|MINUS
+	|STRING of string
+	|TIMES
+	|DIVIDE
+	|EQ
+	|NEQ
+	|LT
+	|LE
+	|GT
+	|GE
+	|AND
+	|OR
+	|LBRACE
+	|RBRACE
+	|DOT
+	|LBRACK
+	|RBRACK
+	|LPAREN
+	|RPAREN
+	|SEMICOLON
+	|WHILE
+	|FOR
+	|BREAK
+	|CONTINUE
+	|IF
+	|ELSE
+	|ELSEIF
+
+%nonterm
+	empty
+	|arith_exp
+	|bool_exp
+	|exp
+	|comp_exp
+	|lvalue
+	|unit_exp
+	
+%nonassoc
+	EQ
+	|NEQ
+	|LE
+	|GE
+	|LT
+	|GT
+
+%left
+	PLUS
+	| MINUS
+	| TIMES
+	| DIVIDE
+	| AND
+	| OR
+	
+
+%%
+
+program: exp						()
+
+exp : INT						()
+	|STRING						()
+	|BREAK						()	
+	|CONTINUE					()
+	|arith_exp					()
+	|bool_exp					()
+	|comp_exp					()
+	|lvalue						()
+	|WHILE LPARAN exp RPARAN LBRACE exp RBRACE	()	
+	|IF LBRACE exp RBRACE				()
+	|ElSE LBRACE exp RBRACE				()
+	|LPARAN exp RPARAN				()
+	
+		
+arith_exp : exp PLUD exp				()
+	
+	| exp MINUS exp					()
+	| exp TIMES exp					()
+	| exp DIVIDE exp				()
+	
+bool_exp :
+	exp AND exp					()
+	|exp OR exp					()
+
+comp_exp :
+	exp EQ exp					()
+	| exp LT exp					()
+	| exp LE exp					()
+	| exp GE exp					()
+	| exp NEQ exp					()
+	| exp GT exp					()
+
+lvalue : 
+	ID
+	| ID LBRACK exp RBREAK				()
+	| lvalue LBRACk exp RBRACK			()
+
+unit_exp :
+	LPARAN RPARAN					()
+	
+
+
+	
