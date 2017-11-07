@@ -1,9 +1,13 @@
 (*structure A = Absyn*)
 
 %%
+%eop EOF
+%verbose
+%pure
+%name gram
 
 %term
-	EOF
+    EOF
 	|ID of string
 	|INT of int
 	|PLUS
@@ -24,8 +28,8 @@
 	|DOT
 	|LBRACK
 	|RBRACK
-	|LPAREN
-	|RPAREN
+	|LPARAN
+	|RPARAN
 	|SEMICOLON
 	|WHILE
 	|FOR
@@ -37,13 +41,29 @@
 
 %nonterm
 	empty
+	|start
 	|arith_exp
-	|bool_exp
 	|exp
 	|comp_exp
 	|lvalue
 	|unit_exp
 	
+
+
+%left OR
+%left AND
+%left EQ NEQ
+%left LT LE GT GE
+%left PLUS MINUS
+%left TIMES DIVIDE            (*add %*)
+%pos INT
+(*
+
+Operator precedence and associativity. The %left says the operator is
+left associative and the precedence increase as you go down this list.
+
+*)	
+(*
 %nonassoc
 	EQ
 	|NEQ
@@ -59,38 +79,35 @@
 	| DIVIDE
 	| AND
 	| OR
-	
 
+*)
 %%
 
-program: exp						()
+start: exp						()
 
 exp : INT						()
 	|STRING						()
 	|BREAK						()	
 	|CONTINUE					()
 	|arith_exp					()
-	|bool_exp					()
 	|comp_exp					()
 	|lvalue						()
 	|WHILE LPARAN exp RPARAN LBRACE exp RBRACE	()	
 	|IF LBRACE exp RBRACE				()
-	|ElSE LBRACE exp RBRACE				()
-	|LPARAN exp RPARAN				()
-	
-		
-arith_exp : exp PLUD exp				()
-	
+	|ELSE LBRACE exp RBRACE				()
+	|LPARAN exp RPARAN				() 
+
+arith_exp : exp PLUS exp				()
 	| exp MINUS exp					()
 	| exp TIMES exp					()
 	| exp DIVIDE exp				()
 	
-bool_exp :
-	exp AND exp					()
-	|exp OR exp					()
+
 
 comp_exp :
-	exp EQ exp					()
+	exp AND exp					()
+	| exp OR exp					()
+	| exp EQ exp					()
 	| exp LT exp					()
 	| exp LE exp					()
 	| exp GE exp					()
@@ -98,13 +115,14 @@ comp_exp :
 	| exp GT exp					()
 
 lvalue : 
-	ID
-	| ID LBRACK exp RBREAK				()
-	| lvalue LBRACk exp RBRACK			()
+	ID                                  ()
+(*	| ID LBRACK exp RBRACK				()  *)
+	| lvalue LBRACK exp RBRACK			()
 
+(*
 unit_exp :
 	LPARAN RPARAN					()
-	
+	*)
 
 
 	
