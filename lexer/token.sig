@@ -28,6 +28,7 @@ val RBRACE:  num * num -> token
 val LBRACE:  num * num -> token
 val RBRACK:  num * num -> token
 val LBRACK:  num * num -> token
+val INTEGER_TYPE : num * num -> token
 val RPAREN:  num * num -> token
 val LPAREN:  num * num -> token
 val SEMICOLON:  num * num -> token

@@ -40,7 +40,7 @@ notQuote = [^"];
 "," => (Tokens.COMMA(yypos, yypos + size yytext));
 ";" => (Tokens.SEMICOLON(yypos, yypos + size yytext));
 
-"int"  	 => (Tokens.INT_TYPE(yypos,yypos+ size yytext));
+"int"  	 => (Tokens.INTEGER_TYPE(yypos,yypos+ size yytext));
 "for"      => (Tokens.FOR(yypos, yypos + size yytext));
 "while"    => (Tokens.WHILE(yypos, yypos + size yytext));
 "else" => (Tokens.ELSE(yypos, yypos + size yytext));

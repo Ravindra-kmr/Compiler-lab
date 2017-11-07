@@ -12,7 +12,7 @@
 	|INT of int
 	|PLUS
 	|MINUS
-	|STRING of string
+	|INTEGER_TYPE of string
 	|TIMES
 	|DIVIDE
 	|EQ
@@ -25,28 +25,23 @@
 	|OR
 	|LBRACE
 	|RBRACE
-	|DOT
 	|LBRACK
 	|RBRACK
 	|LPARAN
 	|RPARAN
 	|SEMICOLON
 	|WHILE
-	|FOR
-	|BREAK
-	|CONTINUE
 	|IF
 	|ELSE
-	|ELSEIF
+	|NIL
 
 %nonterm
-	empty
-	|start
+	start
+	|statements
+	|statement
 	|arith_exp
 	|exp
 	|comp_exp
-	|lvalue
-	|unit_exp
 	
 
 
@@ -83,46 +78,40 @@ left associative and the precedence increase as you go down this list.
 *)
 %%
 
-start: exp						()
+start: statements						()
 
-exp : INT						()
-	|STRING						()
-	|BREAK						()	
-	|CONTINUE					()
-	|arith_exp					()
-	|comp_exp					()
-	|lvalue						()
-	|WHILE LPARAN exp RPARAN LBRACE exp RBRACE	()	
-	|IF LBRACE exp RBRACE				()
-	|ELSE LBRACE exp RBRACE				()
-	|LPARAN exp RPARAN				() 
-
-arith_exp : exp PLUS exp				()
-	| exp MINUS exp					()
-	| exp TIMES exp					()
-	| exp DIVIDE exp				()
+statements : statement SEMICOLON statements 			()
+	|NIL							()
 	
-
+statement:  WHILE LPARAN comp_exp RPARAN LBRACE statements RBRACE	()
+	| IF LBRACK comp_exp RBRACK LPARAN statements RPARAN		()
+	| IF LBRACK comp_exp RBRACK LPARAN statements RPARAN ELSE LPARAN statements RPARAN	()
+	| INTEGER_TYPE ID EQ arith_exp							()
+	| ID EQ arith_exp							()
+		
 
 comp_exp :
-	exp AND exp					()
-	| exp OR exp					()
-	| exp EQ exp					()
-	| exp LT exp					()
-	| exp LE exp					()
-	| exp GE exp					()
-	| exp NEQ exp					()
-	| exp GT exp					()
+	comp_exp AND comp_exp					()
+	| comp_exp OR comp_exp					()
+	| comp_exp EQ comp_exp						()
+	| arith_exp EQ arith_exp					()
+	| arith_exp LT arith_exp					()
+	| arith_exp LE arith_exp					()
+	| arith_exp GE arith_exp					()
+	| arith_exp NEQ arith_exp					()
+	| arith_exp GT arith_exp					()
 
-lvalue : 
-	ID                                  ()
-(*	| ID LBRACK exp RBRACK				()  *)
-	| lvalue LBRACK exp RBRACK			()
+arith_exp : arith_exp PLUS arith_exp				()
+	| arith_exp MINUS arith_exp					()
+	| arith_exp TIMES arith_exp					()
+	| arith_exp DIVIDE arith_exp				()
+	| exp							()
+	| LBRACK arith_exp RBRACK				()
 
-(*
-unit_exp :
-	LPARAN RPARAN					()
-	*)
+exp : ID							()
+	| INT							()
+	
+
 
 
 	
