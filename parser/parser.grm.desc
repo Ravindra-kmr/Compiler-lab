@@ -186,10 +186,19 @@ state 15:
 	statement : IF LPARAN comp_exp . RPARAN LBRACE statements RBRACE ELSE LBRACE statements RBRACE 
 	comp_exp : comp_exp . AND comp_exp 
 	comp_exp : comp_exp . OR comp_exp 
+<<<<<<< HEAD
 
 	AND	shift 28
 	OR	shift 27
 	RPARAN	shift 26
+=======
+	comp_exp : comp_exp . EEQ comp_exp 
+
+	EEQ	shift 26
+	AND	shift 25
+	OR	shift 24
+	RBRACK	shift 23
+>>>>>>> da2c6c98f5e4f013b310a51efb18a63844a8d723
 
 
 	.	error
@@ -210,13 +219,14 @@ state 17:
 	arith_exp : arith_exp . MINUS arith_exp 
 	arith_exp : arith_exp . TIMES arith_exp 
 	arith_exp : arith_exp . DIVIDE arith_exp 
-	comp_exp : arith_exp . EQ arith_exp 
+	comp_exp : arith_exp . EEQ arith_exp 
 	comp_exp : arith_exp . LT arith_exp 
 	comp_exp : arith_exp . LE arith_exp 
 	comp_exp : arith_exp . GE arith_exp 
 	comp_exp : arith_exp . NEQ arith_exp 
 	comp_exp : arith_exp . GT arith_exp 
 
+<<<<<<< HEAD
 	PLUS	shift 38
 	MINUS	shift 37
 	TIMES	shift 36
@@ -227,6 +237,18 @@ state 17:
 	LE	shift 31
 	GT	shift 30
 	GE	shift 29
+=======
+	PLUS	shift 36
+	MINUS	shift 35
+	TIMES	shift 34
+	DIVIDE	shift 33
+	EEQ	shift 32
+	NEQ	shift 31
+	LT	shift 30
+	LE	shift 29
+	GT	shift 28
+	GE	shift 27
+>>>>>>> da2c6c98f5e4f013b310a51efb18a63844a8d723
 
 
 	.	error
@@ -279,10 +301,19 @@ state 22:
 	statement : WHILE LPARAN comp_exp . RPARAN LBRACE statements RBRACE 
 	comp_exp : comp_exp . AND comp_exp 
 	comp_exp : comp_exp . OR comp_exp 
+<<<<<<< HEAD
 
 	AND	shift 28
 	OR	shift 27
 	RPARAN	shift 40
+=======
+	comp_exp : comp_exp . EEQ comp_exp 
+
+	EEQ	shift 26
+	AND	shift 25
+	OR	shift 24
+	RPARAN	shift 38
+>>>>>>> da2c6c98f5e4f013b310a51efb18a63844a8d723
 
 
 	.	error
@@ -360,7 +391,11 @@ state 27:
 
 state 28:
 
+<<<<<<< HEAD
 	comp_exp : comp_exp AND . comp_exp 
+=======
+	comp_exp : comp_exp EEQ . comp_exp 
+>>>>>>> da2c6c98f5e4f013b310a51efb18a63844a8d723
 
 	ID	shift 21
 	INT_CONST	shift 20
@@ -451,7 +486,7 @@ state 33:
 
 state 34:
 
-	comp_exp : arith_exp EQ . arith_exp 
+	comp_exp : arith_exp EEQ . arith_exp 
 
 	ID	shift 21
 	INT_CONST	shift 20
@@ -591,6 +626,7 @@ state 43:
 
 state 44:
 
+<<<<<<< HEAD
 	statement : IF LPARAN comp_exp RPARAN LBRACE . statements RBRACE 
 	statement : IF LPARAN comp_exp RPARAN LBRACE . statements RBRACE ELSE LBRACE statements RBRACE 
 
@@ -600,6 +636,15 @@ state 44:
 	WHILE	shift 5
 	IF	shift 4
 	NIL	shift 3
+=======
+	comp_exp : comp_exp . AND comp_exp 
+	comp_exp : comp_exp . OR comp_exp 
+	comp_exp : comp_exp OR comp_exp .  (reduce by rule 9)
+	comp_exp : comp_exp . EEQ comp_exp 
+
+	EEQ	shift 26
+	AND	shift 25
+>>>>>>> da2c6c98f5e4f013b310a51efb18a63844a8d723
 
 	statements	goto 61
 	statement	goto 1
@@ -611,9 +656,15 @@ state 45:
 
 	comp_exp : comp_exp . AND comp_exp 
 	comp_exp : comp_exp . OR comp_exp 
+<<<<<<< HEAD
 	comp_exp : comp_exp OR comp_exp .  (reduce by rule 10)
 
 	AND	shift 28
+=======
+	comp_exp : comp_exp . EEQ comp_exp 
+
+	EEQ	shift 26
+>>>>>>> da2c6c98f5e4f013b310a51efb18a63844a8d723
 
 
 	.	reduce by rule 10
@@ -624,6 +675,11 @@ state 46:
 	comp_exp : comp_exp . AND comp_exp 
 	comp_exp : comp_exp AND comp_exp .  (reduce by rule 9)
 	comp_exp : comp_exp . OR comp_exp 
+<<<<<<< HEAD
+=======
+	comp_exp : comp_exp . EEQ comp_exp 
+	comp_exp : comp_exp EEQ comp_exp .  (reduce by rule 10)
+>>>>>>> da2c6c98f5e4f013b310a51efb18a63844a8d723
 
 
 
@@ -721,7 +777,7 @@ state 52:
 	arith_exp : arith_exp . MINUS arith_exp 
 	arith_exp : arith_exp . TIMES arith_exp 
 	arith_exp : arith_exp . DIVIDE arith_exp 
-	comp_exp : arith_exp EQ arith_exp .  (reduce by rule 11)
+	comp_exp : arith_exp EEQ arith_exp .  (reduce by rule 11)
 
 	PLUS	shift 38
 	MINUS	shift 37

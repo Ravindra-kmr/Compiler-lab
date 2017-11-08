@@ -2,7 +2,6 @@ signature gram_TOKENS =
 sig
 type ('a,'b) token
 type svalue
-val ASSIGN:  'a * 'a -> (svalue,'a) token
 val NIL:  'a * 'a -> (svalue,'a) token
 val ELSE:  'a * 'a -> (svalue,'a) token
 val IF:  'a * 'a -> (svalue,'a) token
@@ -25,12 +24,10 @@ val EEQ:  'a * 'a -> (svalue,'a) token
 val EQ:  'a * 'a -> (svalue,'a) token
 val DIVIDE:  'a * 'a -> (svalue,'a) token
 val TIMES:  'a * 'a -> (svalue,'a) token
-val STRING:  'a * 'a -> (svalue,'a) token
-val INT:  'a * 'a -> (svalue,'a) token
-val STRING_CONST: (string) *  'a * 'a -> (svalue,'a) token
+val INTEGER_TYPE: (string) *  'a * 'a -> (svalue,'a) token
 val MINUS:  'a * 'a -> (svalue,'a) token
 val PLUS:  'a * 'a -> (svalue,'a) token
-val INT_CONST: (int) *  'a * 'a -> (svalue,'a) token
+val INT: (int) *  'a * 'a -> (svalue,'a) token
 val ID: (string) *  'a * 'a -> (svalue,'a) token
 val EOF:  'a * 'a -> (svalue,'a) token
 end

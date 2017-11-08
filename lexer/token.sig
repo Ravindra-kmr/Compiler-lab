@@ -19,6 +19,7 @@ val LE:  num * num -> token
 val LT:  num * num -> token
 val NEQ:  num * num -> token
 val EQ:  num * num -> token
+val EEQ: num * num -> token
 val DIVIDE:  num * num -> token
 val TIMES:  num * num -> token
 val MINUS:  num * num -> token
