@@ -19,20 +19,21 @@ datatype Logical_operator = AND
 
 datatype Expr  = Const of int
 		| Id of string
-	        | Bin_Op   of Expr * Arithematic_Operator * Expr
+        | Bin_Op   of Expr * Arithematic_Operator * Expr
 		| Log_op   of Expr * Logical_operator * Expr
 		| Rel_op   of Expr * Relational_operator * Expr;
 
 (* meaning of binary operators *)
 datatype Stm = Var of string 
-		| Exp_abs of Expr
-		 
+		| Exp_abs of Expr               (*doubt*)
+
+
 datatype Stms = If of Expr * Stms 
 		| Ifelse of Expr*Stms*Stms
 		| While of Expr * Stms
-		| nil
-		| Asign of Stm * Expr
-		| Initialize of Stm * Expr
+		| nil                           (*not needed*)
+		| Assign of Stm * Expr
+		| Initialize of Stm * Expr      (*not needed*)
 		
 
 fun plus x y = Bin_Op (x, Plus, y)
@@ -49,6 +50,9 @@ fun greater_then x y = Rel_op (x , GT, y)
 fun less_then x y = Rel_op (x , LT, y)
 fun greater_or_equal x y = Rel_op (x , GE, y)
 fun smaller_or_equal x y = Rel_op (x , LE, y)
+
+fun IF a b = If (a,b)
+fun IFELSE a b c = Ifelse(a, b, c)
 (*fun arith_Op Plus  x y = x + y
   | arith_Op Minus x y = x - y
   | arith_Op Times   x y = x * y

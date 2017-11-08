@@ -21,7 +21,6 @@ val GT:  'a * 'a -> (svalue,'a) token
 val LE:  'a * 'a -> (svalue,'a) token
 val LT:  'a * 'a -> (svalue,'a) token
 val NEQ:  'a * 'a -> (svalue,'a) token
-val EEQ:  'a * 'a -> (svalue,'a) token
 val EQ:  'a * 'a -> (svalue,'a) token
 val DIVIDE:  'a * 'a -> (svalue,'a) token
 val TIMES:  'a * 'a -> (svalue,'a) token
