@@ -9,10 +9,12 @@
 %term
     EOF
 	|ID of string
-	|INT of int
+	|INT_CONST of int
 	|PLUS
 	|MINUS
-	|INTEGER_TYPE of string
+	|STRING_CONST of string
+	|INT
+	|STRING
 	|TIMES
 	|DIVIDE
 	|EQ
@@ -34,7 +36,9 @@
 	|IF
 	|ELSE
 	|NIL
-
+    |ASSIGN
+    
+    
 %nonterm
 	start
 	|statements
@@ -80,20 +84,21 @@ left associative and the precedence increase as you go down this list.
 
 start: statements						()
 
-statements : statement SEMICOLON statements 			()
+statements : statement statements 			()
 	|NIL							()
 	
 statement:  WHILE LPARAN comp_exp RPARAN LBRACE statements RBRACE	()
-	| IF LBRACK comp_exp RBRACK LPARAN statements RPARAN		()
-	| IF LBRACK comp_exp RBRACK LPARAN statements RPARAN ELSE LPARAN statements RPARAN	()
-	| INTEGER_TYPE ID EQ arith_exp							()
-	| ID EQ arith_exp							()
-		
+	| IF LPARAN comp_exp RPARAN LBRACE statements RBRACE		()
+	| IF LPARAN comp_exp RPARAN LBRACE statements RBRACE ELSE LBRACE statements RBRACE	()
+	| INT ID ASSIGN arith_exp SEMICOLON							()
+	| STRING ID ASSIGN STRING_CONST SEMICOLON                   ()
+	| ID ASSIGN arith_exp SEMICOLON							()
+	
 
 comp_exp :
 	comp_exp AND comp_exp					()
 	| comp_exp OR comp_exp					()
-	| comp_exp EQ comp_exp						()
+(*	| comp_exp EQ comp_exp						()  *)
 	| arith_exp EQ arith_exp					()
 	| arith_exp LT arith_exp					()
 	| arith_exp LE arith_exp					()
@@ -106,11 +111,11 @@ arith_exp : arith_exp PLUS arith_exp				()
 	| arith_exp TIMES arith_exp					()
 	| arith_exp DIVIDE arith_exp				()
 	| exp							()
-	| LBRACK arith_exp RBRACK				()
+	| LBRACE arith_exp RBRACE				()
 
 exp : ID							()
-	| INT							()
-	
+    | INT_CONST							()
+	| STRING_CONST                      ()
 
 
 
