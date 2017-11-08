@@ -1,0 +1,113 @@
+structure Absyn = Ast
+
+%%
+%eop EOF
+%verbose
+%pure
+%name gram
+
+%term
+    EOF
+	|ID of string
+	|INT of int
+	|PLUS
+	|MINUS
+	|INTEGER_TYPE of string
+	|TIMES
+	|DIVIDE
+	|EQ
+	|EEQ
+	|NEQ
+	|LT
+	|LE
+	|GT
+	|GE
+	|AND
+	|OR
+	|LBRACE
+	|RBRACE
+	|LBRACK
+	|RBRACK
+	|LPARAN
+	|RPARAN
+	|SEMICOLON
+	|WHILE
+	|IF
+	|ELSE
+	|NIL
+
+%nonterm
+	start
+	|statements
+	|statement
+	|arith_exp
+	|exp
+	|comp_exp
+	
+
+
+%left OR
+%left AND
+%left EQ NEQ EEQ
+%left LT LE GT GE
+%left PLUS MINUS
+%left TIMES DIVIDE            (*add %*)
+%pos INT
+(*
+
+Operator precedence and associativity. The %left says the operator is
+left associative and the precedence increase as you go down this list.
+
+*)	
+(*
+%nonassoc
+	EQ
+	|NEQ
+	|LE
+	|GE
+	|LT
+	|GT
+
+%left
+	PLUS
+	| MINUS
+	| TIMES
+	| DIVIDE
+	| AND
+	| OR
+
+*)
+%%
+
+start: statements						(Statements)
+
+statements : statement SEMICOLON statements 			(statement::statements)
+	|NIL							(Absyn.nil)
+	
+statement:  WHILE LPARAN comp_exp RPARAN LBRACE statements RBRACE	(Absyn.While (comp_exp, statements))
+	| IF LBRACK comp_exp RBRACK LPARAN statements RPARAN		(Absyn.If (comp_exp, statements))
+	| IF LBRACK comp_exp RBRACK LPARAN statements RPARAN ELSE LPARAN statements RPARAN	(Absyn.Ifelse (comp_exp, statements, statements))
+	| INTEGER_TYPE ID EQ arith_exp							(Absyn.Initialize (ID, arith_exp))
+	| ID EQ arith_exp							(Absyn.Asign (ID, arith_exp))
+		
+
+comp_exp :
+	comp_exp AND comp_exp					(Absyn.and_op comp_exp1 comp_exp2)
+	| comp_exp OR comp_exp					(Absyn.or_op comp_exp1 comp_exp2)
+	| comp_exp EEQ comp_exp						(Absyn.equality comp_exp1 comp_exp2)
+	| arith_exp EEQ arith_exp					(Absyn.equality arith_exp1 arith_exp2)
+	| arith_exp LT arith_exp					(Absyn.less_then arith_exp1 arith_exp2 )
+	| arith_exp LE arith_exp					(Absyn.smaller_or_equal arith_exp1 arith_exp2)
+	| arith_exp GE arith_exp					(Absyn.greater_or_equal arith_exp1 arith_exp2)
+	| arith_exp NEQ arith_exp					(Absyn.not_equal arith_exp1 arith_exp2)
+	| arith_exp GT arith_exp					(Absyn.greater_then arith_exp1 arith_exp2)
+
+arith_exp : arith_exp PLUS arith_exp				(Absyn.plus arith_exp1 arith_exp2)
+	| arith_exp MINUS arith_exp					(Absyn.minus arith_exp1 arith_exp2)
+	| arith_exp TIMES arith_exp					(Absyn.times arith_exp1 arith_exp2)
+	| arith_exp DIVIDE arith_exp				(Absyn.divide arith_exp1 arith_exp2)
+	| exp							(Absyn.Exp_abs (exp))
+	| LBRACK arith_exp RBRACK				(Absyn.Exp_abs (arith_exp))
+
+exp : ID							(Absyn.Var (ID))
+	| INT							(Absyn.Const (INT))

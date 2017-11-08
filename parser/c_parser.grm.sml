@@ -8,7 +8,7 @@ structure ParserData=
 struct
 structure Header = 
 struct
-(*structure A = Absyn*)
+structure Absyn = Ast
 
 
 end
@@ -280,137 +280,152 @@ fn (i392,defaultPos,stack,
     (()):arg) =>
 case (i392,stack)
 of  ( 0, ( ( _, ( _, statements1left, statements1right)) :: rest671))
- => let val  result = MlyValue.ntVOID ()
+ => let val  result = MlyValue.ntVOID (Statements)
  in ( LrTable.NT 0, ( result, statements1left, statements1right), 
 rest671)
 end
 |  ( 1, ( ( _, ( _, _, statements1right)) :: _ :: ( _, ( _, 
 statement1left, _)) :: rest671)) => let val  result = MlyValue.ntVOID
- ()
+ (statement::statements)
  in ( LrTable.NT 1, ( result, statement1left, statements1right), 
 rest671)
 end
 |  ( 2, ( ( _, ( _, NIL1left, NIL1right)) :: rest671)) => let val  
-result = MlyValue.ntVOID ()
+result = MlyValue.ntVOID (Absyn.nil)
  in ( LrTable.NT 1, ( result, NIL1left, NIL1right), rest671)
 end
 |  ( 3, ( ( _, ( _, _, RBRACE1right)) :: _ :: _ :: _ :: _ :: _ :: ( _,
  ( _, WHILE1left, _)) :: rest671)) => let val  result = 
-MlyValue.ntVOID ()
+MlyValue.ntVOID (Absyn.While (comp_exp, statements))
  in ( LrTable.NT 2, ( result, WHILE1left, RBRACE1right), rest671)
 end
 |  ( 4, ( ( _, ( _, _, RPARAN1right)) :: _ :: _ :: _ :: _ :: _ :: ( _,
  ( _, IF1left, _)) :: rest671)) => let val  result = MlyValue.ntVOID (
-)
+Absyn.If (comp_exp, statements))
  in ( LrTable.NT 2, ( result, IF1left, RPARAN1right), rest671)
 end
 |  ( 5, ( ( _, ( _, _, RPARAN2right)) :: _ :: _ :: _ :: _ :: _ :: _ ::
  _ :: _ :: _ :: ( _, ( _, IF1left, _)) :: rest671)) => let val  result
- = MlyValue.ntVOID ()
+ = MlyValue.ntVOID (Absyn.Ifelse (comp_exp, statements, statements))
  in ( LrTable.NT 2, ( result, IF1left, RPARAN2right), rest671)
 end
-|  ( 6, ( ( _, ( _, _, arith_exp1right)) :: _ :: _ :: ( _, ( _, 
-INTEGER_TYPE1left, _)) :: rest671)) => let val  result = 
-MlyValue.ntVOID ()
+|  ( 6, ( ( _, ( _, _, arith_exp1right)) :: _ :: ( _, ( MlyValue.ID ID
+, _, _)) :: ( _, ( _, INTEGER_TYPE1left, _)) :: rest671)) => let val  
+result = MlyValue.ntVOID (Absyn.Initialize (ID, arith_exp))
  in ( LrTable.NT 2, ( result, INTEGER_TYPE1left, arith_exp1right), 
 rest671)
 end
-|  ( 7, ( ( _, ( _, _, arith_exp1right)) :: _ :: ( _, ( _, ID1left, _)
-) :: rest671)) => let val  result = MlyValue.ntVOID ()
+|  ( 7, ( ( _, ( _, _, arith_exp1right)) :: _ :: ( _, ( MlyValue.ID ID
+, ID1left, _)) :: rest671)) => let val  result = MlyValue.ntVOID (
+Absyn.Asign (ID, arith_exp))
  in ( LrTable.NT 2, ( result, ID1left, arith_exp1right), rest671)
 end
-|  ( 8, ( ( _, ( _, _, comp_exp2right)) :: _ :: ( _, ( _, 
-comp_exp1left, _)) :: rest671)) => let val  result = MlyValue.ntVOID (
+|  ( 8, ( ( _, ( MlyValue.ntVOID comp_exp2, _, comp_exp2right)) :: _
+ :: ( _, ( MlyValue.ntVOID comp_exp1, comp_exp1left, _)) :: rest671))
+ => let val  result = MlyValue.ntVOID (
+Absyn.and_op comp_exp1 comp_exp2)
+ in ( LrTable.NT 5, ( result, comp_exp1left, comp_exp2right), rest671)
+
+end
+|  ( 9, ( ( _, ( MlyValue.ntVOID comp_exp2, _, comp_exp2right)) :: _
+ :: ( _, ( MlyValue.ntVOID comp_exp1, comp_exp1left, _)) :: rest671))
+ => let val  result = MlyValue.ntVOID (Absyn.or_op comp_exp1 comp_exp2
 )
  in ( LrTable.NT 5, ( result, comp_exp1left, comp_exp2right), rest671)
 
 end
-|  ( 9, ( ( _, ( _, _, comp_exp2right)) :: _ :: ( _, ( _, 
-comp_exp1left, _)) :: rest671)) => let val  result = MlyValue.ntVOID (
-)
+|  ( 10, ( ( _, ( MlyValue.ntVOID comp_exp2, _, comp_exp2right)) :: _
+ :: ( _, ( MlyValue.ntVOID comp_exp1, comp_exp1left, _)) :: rest671))
+ => let val  result = MlyValue.ntVOID (
+Absyn.equality comp_exp1 comp_exp2)
  in ( LrTable.NT 5, ( result, comp_exp1left, comp_exp2right), rest671)
 
 end
-|  ( 10, ( ( _, ( _, _, comp_exp2right)) :: _ :: ( _, ( _, 
-comp_exp1left, _)) :: rest671)) => let val  result = MlyValue.ntVOID (
-)
- in ( LrTable.NT 5, ( result, comp_exp1left, comp_exp2right), rest671)
-
-end
-|  ( 11, ( ( _, ( _, _, arith_exp2right)) :: _ :: ( _, ( _, 
-arith_exp1left, _)) :: rest671)) => let val  result = MlyValue.ntVOID
- ()
+|  ( 11, ( ( _, ( MlyValue.ntVOID arith_exp2, _, arith_exp2right)) ::
+ _ :: ( _, ( MlyValue.ntVOID arith_exp1, arith_exp1left, _)) :: 
+rest671)) => let val  result = MlyValue.ntVOID (
+Absyn.equality arith_exp1 arith_exp2)
  in ( LrTable.NT 5, ( result, arith_exp1left, arith_exp2right), 
 rest671)
 end
-|  ( 12, ( ( _, ( _, _, arith_exp2right)) :: _ :: ( _, ( _, 
-arith_exp1left, _)) :: rest671)) => let val  result = MlyValue.ntVOID
- ()
+|  ( 12, ( ( _, ( MlyValue.ntVOID arith_exp2, _, arith_exp2right)) ::
+ _ :: ( _, ( MlyValue.ntVOID arith_exp1, arith_exp1left, _)) :: 
+rest671)) => let val  result = MlyValue.ntVOID (
+Absyn.less_then arith_exp1 arith_exp2 )
  in ( LrTable.NT 5, ( result, arith_exp1left, arith_exp2right), 
 rest671)
 end
-|  ( 13, ( ( _, ( _, _, arith_exp2right)) :: _ :: ( _, ( _, 
-arith_exp1left, _)) :: rest671)) => let val  result = MlyValue.ntVOID
- ()
+|  ( 13, ( ( _, ( MlyValue.ntVOID arith_exp2, _, arith_exp2right)) ::
+ _ :: ( _, ( MlyValue.ntVOID arith_exp1, arith_exp1left, _)) :: 
+rest671)) => let val  result = MlyValue.ntVOID (
+Absyn.smaller_or_equal arith_exp1 arith_exp2)
  in ( LrTable.NT 5, ( result, arith_exp1left, arith_exp2right), 
 rest671)
 end
-|  ( 14, ( ( _, ( _, _, arith_exp2right)) :: _ :: ( _, ( _, 
-arith_exp1left, _)) :: rest671)) => let val  result = MlyValue.ntVOID
- ()
+|  ( 14, ( ( _, ( MlyValue.ntVOID arith_exp2, _, arith_exp2right)) ::
+ _ :: ( _, ( MlyValue.ntVOID arith_exp1, arith_exp1left, _)) :: 
+rest671)) => let val  result = MlyValue.ntVOID (
+Absyn.greater_or_equal arith_exp1 arith_exp2)
  in ( LrTable.NT 5, ( result, arith_exp1left, arith_exp2right), 
 rest671)
 end
-|  ( 15, ( ( _, ( _, _, arith_exp2right)) :: _ :: ( _, ( _, 
-arith_exp1left, _)) :: rest671)) => let val  result = MlyValue.ntVOID
- ()
+|  ( 15, ( ( _, ( MlyValue.ntVOID arith_exp2, _, arith_exp2right)) ::
+ _ :: ( _, ( MlyValue.ntVOID arith_exp1, arith_exp1left, _)) :: 
+rest671)) => let val  result = MlyValue.ntVOID (
+Absyn.not_equal arith_exp1 arith_exp2)
  in ( LrTable.NT 5, ( result, arith_exp1left, arith_exp2right), 
 rest671)
 end
-|  ( 16, ( ( _, ( _, _, arith_exp2right)) :: _ :: ( _, ( _, 
-arith_exp1left, _)) :: rest671)) => let val  result = MlyValue.ntVOID
- ()
+|  ( 16, ( ( _, ( MlyValue.ntVOID arith_exp2, _, arith_exp2right)) ::
+ _ :: ( _, ( MlyValue.ntVOID arith_exp1, arith_exp1left, _)) :: 
+rest671)) => let val  result = MlyValue.ntVOID (
+Absyn.greater_then arith_exp1 arith_exp2)
  in ( LrTable.NT 5, ( result, arith_exp1left, arith_exp2right), 
 rest671)
 end
-|  ( 17, ( ( _, ( _, _, arith_exp2right)) :: _ :: ( _, ( _, 
-arith_exp1left, _)) :: rest671)) => let val  result = MlyValue.ntVOID
- ()
+|  ( 17, ( ( _, ( MlyValue.ntVOID arith_exp2, _, arith_exp2right)) ::
+ _ :: ( _, ( MlyValue.ntVOID arith_exp1, arith_exp1left, _)) :: 
+rest671)) => let val  result = MlyValue.ntVOID (
+Absyn.plus arith_exp1 arith_exp2)
  in ( LrTable.NT 3, ( result, arith_exp1left, arith_exp2right), 
 rest671)
 end
-|  ( 18, ( ( _, ( _, _, arith_exp2right)) :: _ :: ( _, ( _, 
-arith_exp1left, _)) :: rest671)) => let val  result = MlyValue.ntVOID
- ()
+|  ( 18, ( ( _, ( MlyValue.ntVOID arith_exp2, _, arith_exp2right)) ::
+ _ :: ( _, ( MlyValue.ntVOID arith_exp1, arith_exp1left, _)) :: 
+rest671)) => let val  result = MlyValue.ntVOID (
+Absyn.minus arith_exp1 arith_exp2)
  in ( LrTable.NT 3, ( result, arith_exp1left, arith_exp2right), 
 rest671)
 end
-|  ( 19, ( ( _, ( _, _, arith_exp2right)) :: _ :: ( _, ( _, 
-arith_exp1left, _)) :: rest671)) => let val  result = MlyValue.ntVOID
- ()
+|  ( 19, ( ( _, ( MlyValue.ntVOID arith_exp2, _, arith_exp2right)) ::
+ _ :: ( _, ( MlyValue.ntVOID arith_exp1, arith_exp1left, _)) :: 
+rest671)) => let val  result = MlyValue.ntVOID (
+Absyn.times arith_exp1 arith_exp2)
  in ( LrTable.NT 3, ( result, arith_exp1left, arith_exp2right), 
 rest671)
 end
-|  ( 20, ( ( _, ( _, _, arith_exp2right)) :: _ :: ( _, ( _, 
-arith_exp1left, _)) :: rest671)) => let val  result = MlyValue.ntVOID
- ()
+|  ( 20, ( ( _, ( MlyValue.ntVOID arith_exp2, _, arith_exp2right)) ::
+ _ :: ( _, ( MlyValue.ntVOID arith_exp1, arith_exp1left, _)) :: 
+rest671)) => let val  result = MlyValue.ntVOID (
+Absyn.divide arith_exp1 arith_exp2)
  in ( LrTable.NT 3, ( result, arith_exp1left, arith_exp2right), 
 rest671)
 end
 |  ( 21, ( ( _, ( _, exp1left, exp1right)) :: rest671)) => let val  
-result = MlyValue.ntVOID ()
+result = MlyValue.ntVOID (Absyn.Exp_abs (exp))
  in ( LrTable.NT 3, ( result, exp1left, exp1right), rest671)
 end
 |  ( 22, ( ( _, ( _, _, RBRACK1right)) :: _ :: ( _, ( _, LBRACK1left,
- _)) :: rest671)) => let val  result = MlyValue.ntVOID ()
+ _)) :: rest671)) => let val  result = MlyValue.ntVOID (
+Absyn.Exp_abs (arith_exp))
  in ( LrTable.NT 3, ( result, LBRACK1left, RBRACK1right), rest671)
 end
-|  ( 23, ( ( _, ( _, ID1left, ID1right)) :: rest671)) => let val  
-result = MlyValue.ntVOID ()
+|  ( 23, ( ( _, ( MlyValue.ID ID, ID1left, ID1right)) :: rest671)) =>
+ let val  result = MlyValue.ntVOID (Absyn.Var (ID))
  in ( LrTable.NT 4, ( result, ID1left, ID1right), rest671)
 end
-|  ( 24, ( ( _, ( _, INT1left, INT1right)) :: rest671)) => let val  
-result = MlyValue.ntVOID ()
+|  ( 24, ( ( _, ( MlyValue.INT INT, INT1left, INT1right)) :: rest671))
+ => let val  result = MlyValue.ntVOID (Absyn.Const (INT))
  in ( LrTable.NT 4, ( result, INT1left, INT1right), rest671)
 end
 | _ => raise (mlyAction i392)

@@ -16,6 +16,7 @@
 	|TIMES
 	|DIVIDE
 	|EQ
+	|EEQ
 	|NEQ
 	|LT
 	|LE
@@ -47,7 +48,7 @@
 
 %left OR
 %left AND
-%left EQ NEQ
+%left EQ NEQ EEQ
 %left LT LE GT GE
 %left PLUS MINUS
 %left TIMES DIVIDE            (*add %*)
@@ -93,8 +94,8 @@ statement:  WHILE LPARAN comp_exp RPARAN LBRACE statements RBRACE	()
 comp_exp :
 	comp_exp AND comp_exp					()
 	| comp_exp OR comp_exp					()
-	| comp_exp EQ comp_exp						()
-	| arith_exp EQ arith_exp					()
+	| comp_exp EEQ comp_exp						()
+	| arith_exp EEQ arith_exp					()
 	| arith_exp LT arith_exp					()
 	| arith_exp LE arith_exp					()
 	| arith_exp GE arith_exp					()
