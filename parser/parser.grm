@@ -1,4 +1,4 @@
-(*structure A = Absyn*)
+structure A = Ast
 
 %%
 %eop EOF
@@ -48,7 +48,7 @@
 	|comp_exp
 	
 
-
+%right ASSIGN
 %left OR
 %left AND
 %left EQ NEQ
@@ -115,7 +115,6 @@ arith_exp : arith_exp PLUS arith_exp				()
 
 exp : ID							()
     | INT_CONST							()
-	| STRING_CONST                      ()
 
 
 
