@@ -16,9 +16,10 @@ datatype Relational_operator = EEQ
 datatype Logical_operator = AND
 			| OR;
 (* The abstract syntax for expressions *)
-
-datatype Expr  = Const of int
-		| Id of string
+datatype Exp= Const_ of int
+              |Id_ of string
+and Expr  = Const of Const
+		| Id of Id_
         | Bin_Op   of Expr * Arithematic_Operator * Expr
 		| Log_op   of Expr * Logical_operator * Expr
 		| Rel_op   of Expr * Relational_operator * Expr;
@@ -50,10 +51,10 @@ fun greater_then x y = Rel_op (x , GT, y)
 fun less_then x y = Rel_op (x , LT, y)
 fun greater_or_equal x y = Rel_op (x , GE, y)
 fun smaller_or_equal x y = Rel_op (x , LE, y)
-
+(*
 fun IF a b = If (a,b)
 fun IFELSE a b c = Ifelse(a, b, c)
-(*fun arith_Op Plus  x y = x + y
+fun arith_Op Plus  x y = x + y
   | arith_Op Minus x y = x - y
   | arith_Op Times   x y = x * y
   | arith_Op Divide x y = x / y;

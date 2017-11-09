@@ -110,7 +110,7 @@ arith_exp : arith_exp PLUS arith_exp				(Ast.plus(arith_exp1,arith_exp2))
 	| arith_exp MINUS arith_exp					(Ast.minus(arith_exp1,arith_exp2))
 	| arith_exp TIMES arith_exp					(Ast.times(arith_exp1,arith_exp2))
 	| arith_exp DIVIDE arith_exp				(Ast.divide(arith_exp1,arith_exp2))
-	| exp							(Ast.)          (*doubt, what to fill*)
+	| exp							(Ast.exp())          (*doubt, what to fill*)
 (*	| LBRACE arith_exp RBRACE				()          *)
 
 exp : ID							(Ast.Var(ID))
