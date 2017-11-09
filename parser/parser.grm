@@ -4,7 +4,7 @@ structure A = Ast
 %eop EOF
 %verbose
 %pure
-%name gram
+%name C
 
 %term
     EOF
@@ -40,13 +40,13 @@ structure A = Ast
     
     
 %nonterm
-	start
-	|statements
-	|statement
-	|arith_exp
-	|exp
-	|comp_exp
-	
+	start   of Ast.Stms list
+	|statements of Ast.Stms list
+	|statement of Ast.Stms
+	|arith_exp  of Ast.Expr
+	|exp of Ast.Expr
+	|comp_exp of Ast.Expr
+
 
 %right ASSIGN
 %left OR
@@ -55,7 +55,8 @@ structure A = Ast
 %left LT LE GT GE
 %left PLUS MINUS
 %left TIMES DIVIDE            (*add %*)
-%pos INT
+%pos int
+%noshift EOF
 (*
 
 Operator precedence and associativity. The %left says the operator is
@@ -85,7 +86,7 @@ left associative and the precedence increase as you go down this list.
 start: statements						(statements)
 
 statements : statement statements 			(statement::statements)
-	|NIL							([])
+            |               ([])
 	
 statement:  WHILE LPARAN comp_exp RPARAN LBRACE statements RBRACE	(Ast.While(comp_exp, statements))
 	| IF LPARAN comp_exp RPARAN LBRACE statements RBRACE		(Ast.If(comp_exp,statements))
@@ -110,10 +111,10 @@ arith_exp : arith_exp PLUS arith_exp				(Ast.plus(arith_exp1,arith_exp2))
 	| arith_exp MINUS arith_exp					(Ast.minus(arith_exp1,arith_exp2))
 	| arith_exp TIMES arith_exp					(Ast.times(arith_exp1,arith_exp2))
 	| arith_exp DIVIDE arith_exp				(Ast.divide(arith_exp1,arith_exp2))
-	| exp							(Ast.exp())          (*doubt, what to fill*)
+	| exp							(exp)          (*doubt, what to fill*)
 (*	| LBRACE arith_exp RBRACE				()          *)
 
-exp : ID							(Ast.Var(ID))
+exp : ID							(Ast.Id(ID))
     | INT_CONST							(Ast.Const(INT_CONST))
 
 

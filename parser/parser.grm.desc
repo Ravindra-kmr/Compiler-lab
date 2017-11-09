@@ -3,33 +3,31 @@ state 0:
 
 	start : . statements 
 
-	ID	shift 7
-	INT	shift 6
-	WHILE	shift 5
-	IF	shift 4
-	NIL	shift 3
+	ID	shift 6
+	INT	shift 5
+	WHILE	shift 4
+	IF	shift 3
 
-	start	goto 60
+	start	goto 59
 	statements	goto 2
 	statement	goto 1
 
-	.	error
+	.	reduce by rule 2
 
 
 state 1:
 
 	statements : statement . statements 
 
-	ID	shift 7
-	INT	shift 6
-	WHILE	shift 5
-	IF	shift 4
-	NIL	shift 3
+	ID	shift 6
+	INT	shift 5
+	WHILE	shift 4
+	IF	shift 3
 
-	statements	goto 8
+	statements	goto 7
 	statement	goto 1
 
-	.	error
+	.	reduce by rule 2
 
 
 state 2:
@@ -43,17 +41,18 @@ state 2:
 
 state 3:
 
-	statements : NIL .  (reduce by rule 2)
+	statement : IF . LPARAN comp_exp RPARAN LBRACE statements RBRACE 
+	statement : IF . LPARAN comp_exp RPARAN LBRACE statements RBRACE ELSE LBRACE statements RBRACE 
+
+	LPARAN	shift 8
 
 
-
-	.	reduce by rule 2
+	.	error
 
 
 state 4:
 
-	statement : IF . LPARAN comp_exp RPARAN LBRACE statements RBRACE 
-	statement : IF . LPARAN comp_exp RPARAN LBRACE statements RBRACE ELSE LBRACE statements RBRACE 
+	statement : WHILE . LPARAN comp_exp RPARAN LBRACE statements RBRACE 
 
 	LPARAN	shift 9
 
@@ -63,9 +62,9 @@ state 4:
 
 state 5:
 
-	statement : WHILE . LPARAN comp_exp RPARAN LBRACE statements RBRACE 
+	statement : INT . ID ASSIGN arith_exp SEMICOLON 
 
-	LPARAN	shift 10
+	ID	shift 10
 
 
 	.	error
@@ -73,25 +72,15 @@ state 5:
 
 state 6:
 
-	statement : INT . ID ASSIGN arith_exp SEMICOLON 
+	statement : ID . ASSIGN arith_exp SEMICOLON 
 
-	ID	shift 11
+	ASSIGN	shift 11
 
 
 	.	error
 
 
 state 7:
-
-	statement : ID . ASSIGN arith_exp SEMICOLON 
-
-	ASSIGN	shift 12
-
-
-	.	error
-
-
-state 8:
 
 	statements : statement statements .  (reduce by rule 1)
 
@@ -100,74 +89,74 @@ state 8:
 	.	reduce by rule 1
 
 
-state 9:
+state 8:
 
 	statement : IF LPARAN . comp_exp RPARAN LBRACE statements RBRACE 
 	statement : IF LPARAN . comp_exp RPARAN LBRACE statements RBRACE ELSE LBRACE statements RBRACE 
 
-	ID	shift 17
-	INT_CONST	shift 16
+	ID	shift 16
+	INT_CONST	shift 15
 
-	arith_exp	goto 15
-	exp	goto 14
-	comp_exp	goto 13
+	arith_exp	goto 14
+	exp	goto 13
+	comp_exp	goto 12
+
+	.	error
+
+
+state 9:
+
+	statement : WHILE LPARAN . comp_exp RPARAN LBRACE statements RBRACE 
+
+	ID	shift 16
+	INT_CONST	shift 15
+
+	arith_exp	goto 14
+	exp	goto 13
+	comp_exp	goto 17
 
 	.	error
 
 
 state 10:
 
-	statement : WHILE LPARAN . comp_exp RPARAN LBRACE statements RBRACE 
+	statement : INT ID . ASSIGN arith_exp SEMICOLON 
 
-	ID	shift 17
-	INT_CONST	shift 16
+	ASSIGN	shift 18
 
-	arith_exp	goto 15
-	exp	goto 14
-	comp_exp	goto 18
 
 	.	error
 
 
 state 11:
 
-	statement : INT ID . ASSIGN arith_exp SEMICOLON 
+	statement : ID ASSIGN . arith_exp SEMICOLON 
 
-	ASSIGN	shift 19
+	ID	shift 16
+	INT_CONST	shift 15
 
+	arith_exp	goto 19
+	exp	goto 13
 
 	.	error
 
 
 state 12:
 
-	statement : ID ASSIGN . arith_exp SEMICOLON 
-
-	ID	shift 17
-	INT_CONST	shift 16
-
-	arith_exp	goto 20
-	exp	goto 14
-
-	.	error
-
-
-state 13:
-
 	statement : IF LPARAN comp_exp . RPARAN LBRACE statements RBRACE 
 	statement : IF LPARAN comp_exp . RPARAN LBRACE statements RBRACE ELSE LBRACE statements RBRACE 
 	comp_exp : comp_exp . AND comp_exp 
 	comp_exp : comp_exp . OR comp_exp 
 
-	AND	shift 23
-	OR	shift 22
-	RPARAN	shift 21
+	AND	shift 22
+	OR	shift 21
+	RPARAN	shift 20
 
 
 	.	error
 
 
-state 14:
+state 13:
 
 	arith_exp : exp .  (reduce by rule 20)
 
@@ -176,7 +165,7 @@ state 14:
 	.	reduce by rule 20
 
 
-state 15:
+state 14:
 
 	arith_exp : arith_exp . PLUS arith_exp 
 	arith_exp : arith_exp . MINUS arith_exp 
@@ -189,22 +178,22 @@ state 15:
 	comp_exp : arith_exp . NEQ arith_exp 
 	comp_exp : arith_exp . GT arith_exp 
 
-	PLUS	shift 33
-	MINUS	shift 32
-	TIMES	shift 31
-	DIVIDE	shift 30
-	EQ	shift 29
-	NEQ	shift 28
-	LT	shift 27
-	LE	shift 26
-	GT	shift 25
-	GE	shift 24
+	PLUS	shift 32
+	MINUS	shift 31
+	TIMES	shift 30
+	DIVIDE	shift 29
+	EQ	shift 28
+	NEQ	shift 27
+	LT	shift 26
+	LE	shift 25
+	GT	shift 24
+	GE	shift 23
 
 
 	.	error
 
 
-state 16:
+state 15:
 
 	exp : INT_CONST .  (reduce by rule 22)
 
@@ -213,7 +202,7 @@ state 16:
 	.	reduce by rule 22
 
 
-state 17:
+state 16:
 
 	exp : ID .  (reduce by rule 21)
 
@@ -222,34 +211,34 @@ state 17:
 	.	reduce by rule 21
 
 
-state 18:
+state 17:
 
 	statement : WHILE LPARAN comp_exp . RPARAN LBRACE statements RBRACE 
 	comp_exp : comp_exp . AND comp_exp 
 	comp_exp : comp_exp . OR comp_exp 
 
-	AND	shift 23
-	OR	shift 22
-	RPARAN	shift 34
+	AND	shift 22
+	OR	shift 21
+	RPARAN	shift 33
 
+
+	.	error
+
+
+state 18:
+
+	statement : INT ID ASSIGN . arith_exp SEMICOLON 
+
+	ID	shift 16
+	INT_CONST	shift 15
+
+	arith_exp	goto 34
+	exp	goto 13
 
 	.	error
 
 
 state 19:
-
-	statement : INT ID ASSIGN . arith_exp SEMICOLON 
-
-	ID	shift 17
-	INT_CONST	shift 16
-
-	arith_exp	goto 35
-	exp	goto 14
-
-	.	error
-
-
-state 20:
 
 	statement : ID ASSIGN arith_exp . SEMICOLON 
 	arith_exp : arith_exp . PLUS arith_exp 
@@ -257,11 +246,22 @@ state 20:
 	arith_exp : arith_exp . TIMES arith_exp 
 	arith_exp : arith_exp . DIVIDE arith_exp 
 
-	PLUS	shift 33
-	MINUS	shift 32
-	TIMES	shift 31
-	DIVIDE	shift 30
-	SEMICOLON	shift 36
+	PLUS	shift 32
+	MINUS	shift 31
+	TIMES	shift 30
+	DIVIDE	shift 29
+	SEMICOLON	shift 35
+
+
+	.	error
+
+
+state 20:
+
+	statement : IF LPARAN comp_exp RPARAN . LBRACE statements RBRACE 
+	statement : IF LPARAN comp_exp RPARAN . LBRACE statements RBRACE ELSE LBRACE statements RBRACE 
+
+	LBRACE	shift 36
 
 
 	.	error
@@ -269,24 +269,27 @@ state 20:
 
 state 21:
 
-	statement : IF LPARAN comp_exp RPARAN . LBRACE statements RBRACE 
-	statement : IF LPARAN comp_exp RPARAN . LBRACE statements RBRACE ELSE LBRACE statements RBRACE 
+	comp_exp : comp_exp OR . comp_exp 
 
-	LBRACE	shift 37
+	ID	shift 16
+	INT_CONST	shift 15
 
+	arith_exp	goto 14
+	exp	goto 13
+	comp_exp	goto 37
 
 	.	error
 
 
 state 22:
 
-	comp_exp : comp_exp OR . comp_exp 
+	comp_exp : comp_exp AND . comp_exp 
 
-	ID	shift 17
-	INT_CONST	shift 16
+	ID	shift 16
+	INT_CONST	shift 15
 
-	arith_exp	goto 15
-	exp	goto 14
+	arith_exp	goto 14
+	exp	goto 13
 	comp_exp	goto 38
 
 	.	error
@@ -294,159 +297,145 @@ state 22:
 
 state 23:
 
-	comp_exp : comp_exp AND . comp_exp 
+	comp_exp : arith_exp GE . arith_exp 
 
-	ID	shift 17
-	INT_CONST	shift 16
+	ID	shift 16
+	INT_CONST	shift 15
 
-	arith_exp	goto 15
-	exp	goto 14
-	comp_exp	goto 39
+	arith_exp	goto 39
+	exp	goto 13
 
 	.	error
 
 
 state 24:
 
-	comp_exp : arith_exp GE . arith_exp 
+	comp_exp : arith_exp GT . arith_exp 
 
-	ID	shift 17
-	INT_CONST	shift 16
+	ID	shift 16
+	INT_CONST	shift 15
 
 	arith_exp	goto 40
-	exp	goto 14
+	exp	goto 13
 
 	.	error
 
 
 state 25:
 
-	comp_exp : arith_exp GT . arith_exp 
+	comp_exp : arith_exp LE . arith_exp 
 
-	ID	shift 17
-	INT_CONST	shift 16
+	ID	shift 16
+	INT_CONST	shift 15
 
 	arith_exp	goto 41
-	exp	goto 14
+	exp	goto 13
 
 	.	error
 
 
 state 26:
 
-	comp_exp : arith_exp LE . arith_exp 
+	comp_exp : arith_exp LT . arith_exp 
 
-	ID	shift 17
-	INT_CONST	shift 16
+	ID	shift 16
+	INT_CONST	shift 15
 
 	arith_exp	goto 42
-	exp	goto 14
+	exp	goto 13
 
 	.	error
 
 
 state 27:
 
-	comp_exp : arith_exp LT . arith_exp 
+	comp_exp : arith_exp NEQ . arith_exp 
 
-	ID	shift 17
-	INT_CONST	shift 16
+	ID	shift 16
+	INT_CONST	shift 15
 
 	arith_exp	goto 43
-	exp	goto 14
+	exp	goto 13
 
 	.	error
 
 
 state 28:
 
-	comp_exp : arith_exp NEQ . arith_exp 
+	comp_exp : arith_exp EQ . arith_exp 
 
-	ID	shift 17
-	INT_CONST	shift 16
+	ID	shift 16
+	INT_CONST	shift 15
 
 	arith_exp	goto 44
-	exp	goto 14
+	exp	goto 13
 
 	.	error
 
 
 state 29:
 
-	comp_exp : arith_exp EQ . arith_exp 
+	arith_exp : arith_exp DIVIDE . arith_exp 
 
-	ID	shift 17
-	INT_CONST	shift 16
+	ID	shift 16
+	INT_CONST	shift 15
 
 	arith_exp	goto 45
-	exp	goto 14
+	exp	goto 13
 
 	.	error
 
 
 state 30:
 
-	arith_exp : arith_exp DIVIDE . arith_exp 
+	arith_exp : arith_exp TIMES . arith_exp 
 
-	ID	shift 17
-	INT_CONST	shift 16
+	ID	shift 16
+	INT_CONST	shift 15
 
 	arith_exp	goto 46
-	exp	goto 14
+	exp	goto 13
 
 	.	error
 
 
 state 31:
 
-	arith_exp : arith_exp TIMES . arith_exp 
+	arith_exp : arith_exp MINUS . arith_exp 
 
-	ID	shift 17
-	INT_CONST	shift 16
+	ID	shift 16
+	INT_CONST	shift 15
 
 	arith_exp	goto 47
-	exp	goto 14
+	exp	goto 13
 
 	.	error
 
 
 state 32:
 
-	arith_exp : arith_exp MINUS . arith_exp 
+	arith_exp : arith_exp PLUS . arith_exp 
 
-	ID	shift 17
-	INT_CONST	shift 16
+	ID	shift 16
+	INT_CONST	shift 15
 
 	arith_exp	goto 48
-	exp	goto 14
+	exp	goto 13
 
 	.	error
 
 
 state 33:
 
-	arith_exp : arith_exp PLUS . arith_exp 
+	statement : WHILE LPARAN comp_exp RPARAN . LBRACE statements RBRACE 
 
-	ID	shift 17
-	INT_CONST	shift 16
+	LBRACE	shift 49
 
-	arith_exp	goto 49
-	exp	goto 14
 
 	.	error
 
 
 state 34:
-
-	statement : WHILE LPARAN comp_exp RPARAN . LBRACE statements RBRACE 
-
-	LBRACE	shift 50
-
-
-	.	error
-
-
-state 35:
 
 	statement : INT ID ASSIGN arith_exp . SEMICOLON 
 	arith_exp : arith_exp . PLUS arith_exp 
@@ -454,17 +443,17 @@ state 35:
 	arith_exp : arith_exp . TIMES arith_exp 
 	arith_exp : arith_exp . DIVIDE arith_exp 
 
-	PLUS	shift 33
-	MINUS	shift 32
-	TIMES	shift 31
-	DIVIDE	shift 30
-	SEMICOLON	shift 51
+	PLUS	shift 32
+	MINUS	shift 31
+	TIMES	shift 30
+	DIVIDE	shift 29
+	SEMICOLON	shift 50
 
 
 	.	error
 
 
-state 36:
+state 35:
 
 	statement : ID ASSIGN arith_exp SEMICOLON .  (reduce by rule 7)
 
@@ -473,36 +462,35 @@ state 36:
 	.	reduce by rule 7
 
 
-state 37:
+state 36:
 
 	statement : IF LPARAN comp_exp RPARAN LBRACE . statements RBRACE 
 	statement : IF LPARAN comp_exp RPARAN LBRACE . statements RBRACE ELSE LBRACE statements RBRACE 
 
-	ID	shift 7
-	INT	shift 6
-	WHILE	shift 5
-	IF	shift 4
-	NIL	shift 3
+	ID	shift 6
+	INT	shift 5
+	WHILE	shift 4
+	IF	shift 3
 
-	statements	goto 52
+	statements	goto 51
 	statement	goto 1
 
-	.	error
+	.	reduce by rule 2
 
 
-state 38:
+state 37:
 
 	comp_exp : comp_exp . AND comp_exp 
 	comp_exp : comp_exp . OR comp_exp 
 	comp_exp : comp_exp OR comp_exp .  (reduce by rule 9)
 
-	AND	shift 23
+	AND	shift 22
 
 
 	.	reduce by rule 9
 
 
-state 39:
+state 38:
 
 	comp_exp : comp_exp . AND comp_exp 
 	comp_exp : comp_exp AND comp_exp .  (reduce by rule 8)
@@ -513,7 +501,7 @@ state 39:
 	.	reduce by rule 8
 
 
-state 40:
+state 39:
 
 	arith_exp : arith_exp . PLUS arith_exp 
 	arith_exp : arith_exp . MINUS arith_exp 
@@ -521,13 +509,30 @@ state 40:
 	arith_exp : arith_exp . DIVIDE arith_exp 
 	comp_exp : arith_exp GE arith_exp .  (reduce by rule 13)
 
-	PLUS	shift 33
-	MINUS	shift 32
-	TIMES	shift 31
-	DIVIDE	shift 30
+	PLUS	shift 32
+	MINUS	shift 31
+	TIMES	shift 30
+	DIVIDE	shift 29
 
 
 	.	reduce by rule 13
+
+
+state 40:
+
+	arith_exp : arith_exp . PLUS arith_exp 
+	arith_exp : arith_exp . MINUS arith_exp 
+	arith_exp : arith_exp . TIMES arith_exp 
+	arith_exp : arith_exp . DIVIDE arith_exp 
+	comp_exp : arith_exp GT arith_exp .  (reduce by rule 15)
+
+	PLUS	shift 32
+	MINUS	shift 31
+	TIMES	shift 30
+	DIVIDE	shift 29
+
+
+	.	reduce by rule 15
 
 
 state 41:
@@ -536,15 +541,15 @@ state 41:
 	arith_exp : arith_exp . MINUS arith_exp 
 	arith_exp : arith_exp . TIMES arith_exp 
 	arith_exp : arith_exp . DIVIDE arith_exp 
-	comp_exp : arith_exp GT arith_exp .  (reduce by rule 15)
+	comp_exp : arith_exp LE arith_exp .  (reduce by rule 12)
 
-	PLUS	shift 33
-	MINUS	shift 32
-	TIMES	shift 31
-	DIVIDE	shift 30
+	PLUS	shift 32
+	MINUS	shift 31
+	TIMES	shift 30
+	DIVIDE	shift 29
 
 
-	.	reduce by rule 15
+	.	reduce by rule 12
 
 
 state 42:
@@ -553,15 +558,15 @@ state 42:
 	arith_exp : arith_exp . MINUS arith_exp 
 	arith_exp : arith_exp . TIMES arith_exp 
 	arith_exp : arith_exp . DIVIDE arith_exp 
-	comp_exp : arith_exp LE arith_exp .  (reduce by rule 12)
+	comp_exp : arith_exp LT arith_exp .  (reduce by rule 11)
 
-	PLUS	shift 33
-	MINUS	shift 32
-	TIMES	shift 31
-	DIVIDE	shift 30
+	PLUS	shift 32
+	MINUS	shift 31
+	TIMES	shift 30
+	DIVIDE	shift 29
 
 
-	.	reduce by rule 12
+	.	reduce by rule 11
 
 
 state 43:
@@ -570,15 +575,15 @@ state 43:
 	arith_exp : arith_exp . MINUS arith_exp 
 	arith_exp : arith_exp . TIMES arith_exp 
 	arith_exp : arith_exp . DIVIDE arith_exp 
-	comp_exp : arith_exp LT arith_exp .  (reduce by rule 11)
+	comp_exp : arith_exp NEQ arith_exp .  (reduce by rule 14)
 
-	PLUS	shift 33
-	MINUS	shift 32
-	TIMES	shift 31
-	DIVIDE	shift 30
+	PLUS	shift 32
+	MINUS	shift 31
+	TIMES	shift 30
+	DIVIDE	shift 29
 
 
-	.	reduce by rule 11
+	.	reduce by rule 14
 
 
 state 44:
@@ -587,35 +592,18 @@ state 44:
 	arith_exp : arith_exp . MINUS arith_exp 
 	arith_exp : arith_exp . TIMES arith_exp 
 	arith_exp : arith_exp . DIVIDE arith_exp 
-	comp_exp : arith_exp NEQ arith_exp .  (reduce by rule 14)
-
-	PLUS	shift 33
-	MINUS	shift 32
-	TIMES	shift 31
-	DIVIDE	shift 30
-
-
-	.	reduce by rule 14
-
-
-state 45:
-
-	arith_exp : arith_exp . PLUS arith_exp 
-	arith_exp : arith_exp . MINUS arith_exp 
-	arith_exp : arith_exp . TIMES arith_exp 
-	arith_exp : arith_exp . DIVIDE arith_exp 
 	comp_exp : arith_exp EQ arith_exp .  (reduce by rule 10)
 
-	PLUS	shift 33
-	MINUS	shift 32
-	TIMES	shift 31
-	DIVIDE	shift 30
+	PLUS	shift 32
+	MINUS	shift 31
+	TIMES	shift 30
+	DIVIDE	shift 29
 
 
 	.	reduce by rule 10
 
 
-state 46:
+state 45:
 
 	arith_exp : arith_exp . PLUS arith_exp 
 	arith_exp : arith_exp . MINUS arith_exp 
@@ -628,7 +616,7 @@ state 46:
 	.	reduce by rule 19
 
 
-state 47:
+state 46:
 
 	arith_exp : arith_exp . PLUS arith_exp 
 	arith_exp : arith_exp . MINUS arith_exp 
@@ -641,7 +629,7 @@ state 47:
 	.	reduce by rule 18
 
 
-state 48:
+state 47:
 
 	arith_exp : arith_exp . PLUS arith_exp 
 	arith_exp : arith_exp . MINUS arith_exp 
@@ -649,14 +637,14 @@ state 48:
 	arith_exp : arith_exp . TIMES arith_exp 
 	arith_exp : arith_exp . DIVIDE arith_exp 
 
-	TIMES	shift 31
-	DIVIDE	shift 30
+	TIMES	shift 30
+	DIVIDE	shift 29
 
 
 	.	reduce by rule 17
 
 
-state 49:
+state 48:
 
 	arith_exp : arith_exp . PLUS arith_exp 
 	arith_exp : arith_exp PLUS arith_exp .  (reduce by rule 16)
@@ -664,30 +652,29 @@ state 49:
 	arith_exp : arith_exp . TIMES arith_exp 
 	arith_exp : arith_exp . DIVIDE arith_exp 
 
-	TIMES	shift 31
-	DIVIDE	shift 30
+	TIMES	shift 30
+	DIVIDE	shift 29
 
 
 	.	reduce by rule 16
 
 
-state 50:
+state 49:
 
 	statement : WHILE LPARAN comp_exp RPARAN LBRACE . statements RBRACE 
 
-	ID	shift 7
-	INT	shift 6
-	WHILE	shift 5
-	IF	shift 4
-	NIL	shift 3
+	ID	shift 6
+	INT	shift 5
+	WHILE	shift 4
+	IF	shift 3
 
-	statements	goto 53
+	statements	goto 52
 	statement	goto 1
 
-	.	error
+	.	reduce by rule 2
 
 
-state 51:
+state 50:
 
 	statement : INT ID ASSIGN arith_exp SEMICOLON .  (reduce by rule 6)
 
@@ -696,10 +683,20 @@ state 51:
 	.	reduce by rule 6
 
 
-state 52:
+state 51:
 
 	statement : IF LPARAN comp_exp RPARAN LBRACE statements . RBRACE 
 	statement : IF LPARAN comp_exp RPARAN LBRACE statements . RBRACE ELSE LBRACE statements RBRACE 
+
+	RBRACE	shift 53
+
+
+	.	error
+
+
+state 52:
+
+	statement : WHILE LPARAN comp_exp RPARAN LBRACE statements . RBRACE 
 
 	RBRACE	shift 54
 
@@ -709,26 +706,16 @@ state 52:
 
 state 53:
 
-	statement : WHILE LPARAN comp_exp RPARAN LBRACE statements . RBRACE 
-
-	RBRACE	shift 55
-
-
-	.	error
-
-
-state 54:
-
 	statement : IF LPARAN comp_exp RPARAN LBRACE statements RBRACE .  (reduce by rule 4)
 	statement : IF LPARAN comp_exp RPARAN LBRACE statements RBRACE . ELSE LBRACE statements RBRACE 
 
-	ELSE	shift 56
+	ELSE	shift 55
 
 
 	.	reduce by rule 4
 
 
-state 55:
+state 54:
 
 	statement : WHILE LPARAN comp_exp RPARAN LBRACE statements RBRACE .  (reduce by rule 3)
 
@@ -737,43 +724,42 @@ state 55:
 	.	reduce by rule 3
 
 
-state 56:
+state 55:
 
 	statement : IF LPARAN comp_exp RPARAN LBRACE statements RBRACE ELSE . LBRACE statements RBRACE 
 
-	LBRACE	shift 57
+	LBRACE	shift 56
 
 
 	.	error
 
 
-state 57:
+state 56:
 
 	statement : IF LPARAN comp_exp RPARAN LBRACE statements RBRACE ELSE LBRACE . statements RBRACE 
 
-	ID	shift 7
-	INT	shift 6
-	WHILE	shift 5
-	IF	shift 4
-	NIL	shift 3
+	ID	shift 6
+	INT	shift 5
+	WHILE	shift 4
+	IF	shift 3
 
-	statements	goto 58
+	statements	goto 57
 	statement	goto 1
+
+	.	reduce by rule 2
+
+
+state 57:
+
+	statement : IF LPARAN comp_exp RPARAN LBRACE statements RBRACE ELSE LBRACE statements . RBRACE 
+
+	RBRACE	shift 58
+
 
 	.	error
 
 
 state 58:
-
-	statement : IF LPARAN comp_exp RPARAN LBRACE statements RBRACE ELSE LBRACE statements . RBRACE 
-
-	RBRACE	shift 59
-
-
-	.	error
-
-
-state 59:
 
 	statement : IF LPARAN comp_exp RPARAN LBRACE statements RBRACE ELSE LBRACE statements RBRACE .  (reduce by rule 5)
 
@@ -782,7 +768,7 @@ state 59:
 	.	reduce by rule 5
 
 
-state 60:
+state 59:
 
 
 	EOF	accept
@@ -790,5 +776,5 @@ state 60:
 
 	.	error
 
-75 of 186 action table entries left after compaction
+74 of 180 action table entries left after compaction
 47 goto table entries

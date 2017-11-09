@@ -6,7 +6,7 @@ datatype Arithematic_Operator = Plus
 			| Times
 			| Divide;
 
-datatype Relational_operator = EEQ
+datatype Relational_operator = EQ
 				| NEQ
 				| LT
 				| GT
@@ -15,42 +15,41 @@ datatype Relational_operator = EEQ
 				
 datatype Logical_operator = AND
 			| OR;
+
 (* The abstract syntax for expressions *)
-datatype Exp= Const_ of int
-              |Id_ of string
-and Expr  = Const of Const
-		| Id of Id_
+
+datatype Expr  = Const of int
+		| Id of string
         | Bin_Op   of Expr * Arithematic_Operator * Expr
 		| Log_op   of Expr * Logical_operator * Expr
 		| Rel_op   of Expr * Relational_operator * Expr;
 
 (* meaning of binary operators *)
+(*
 datatype Stm = Var of string 
 		| Exp_abs of Expr               (*doubt*)
+*)
 
-
-datatype Stms = If of Expr * Stms 
-		| Ifelse of Expr*Stms*Stms
-		| While of Expr * Stms
-		| nil                           (*not needed*)
-		| Assign of Stm * Expr
-		| Initialize of Stm * Expr      (*not needed*)
+datatype Stms = If of Expr * Stms list
+		| Ifelse of Expr*Stms list*Stms list
+		| While of Expr * Stms list
+		| Assign of string * Expr
 		
 
-fun plus x y = Bin_Op (x, Plus, y)
-fun minus x y = Bin_Op (x, Minus, y)
-fun times x y = Bin_Op (x, Times, y)
-fun divide x y = Bin_Op (x, Divide, y)		
+fun plus (x,y) = Bin_Op (x, Plus, y)
+fun minus (x,y) = Bin_Op (x, Minus, y)
+fun times(x,y)= Bin_Op (x, Times, y)
+fun divide (x,y) = Bin_Op (x, Divide, y)		
 
-fun and_op x y = Log_op (x , AND, y)
-fun or_op x y = Log_op (x , OR, y)
+fun and_op (x,y) = Log_op (x , AND, y)
+fun or_op (x,y) = Log_op (x , OR, y)
 
-fun equality x y = Rel_op (x , EEQ, y)
-fun not_equal x y = Rel_op (x , NEQ, y)
-fun greater_then x y = Rel_op (x , GT, y)
-fun less_then x y = Rel_op (x , LT, y)
-fun greater_or_equal x y = Rel_op (x , GE, y)
-fun smaller_or_equal x y = Rel_op (x , LE, y)
+fun equality (x,y) = Rel_op (x , EQ, y)
+fun not_equal (x,y) = Rel_op (x , NEQ, y)
+fun greater_then (x,y) = Rel_op (x , GT, y)
+fun less_then (x,y) = Rel_op (x , LT, y)
+fun greater_or_equal (x,y) = Rel_op (x , GE, y)
+fun smaller_or_equal (x,y) = Rel_op (x , LE, y)
 (*
 fun IF a b = If (a,b)
 fun IFELSE a b c = Ifelse(a, b, c)
