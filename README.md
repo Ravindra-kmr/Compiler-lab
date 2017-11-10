@@ -1,5 +1,11 @@
 # Compiler-lab
 Using ml-yacc and ml-lex making a compiler for c programming language.
+Tools needed:
+
+$sudo apt update
+$sudo apt install smlnj ml-yacc ml-lex ml-burg ml-lpt
+$sudo apt install ml-ulex
+
 How to run:
 1. $ cd Compiler-lab/parse
 2. $ sml
