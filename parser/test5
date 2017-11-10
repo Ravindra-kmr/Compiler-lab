@@ -1,0 +1,6 @@
+char t = "trer";
+char q = "....";
+
+if (t == q) {
+	int a = 1;
+}
