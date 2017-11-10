@@ -33,6 +33,7 @@ structure A = Ast
 	|RPARAN
 	|SEMICOLON
 	|WHILE
+	|FOR
 	|IF
 	|ELSE
 	|NIL
@@ -91,6 +92,7 @@ statements : statement statements 			(statement::statements)
 statement:  WHILE LPARAN comp_exp RPARAN LBRACE statements RBRACE	(Ast.While(comp_exp, statements))
 	| IF LPARAN comp_exp RPARAN LBRACE statements RBRACE		(Ast.If(comp_exp,statements))
 	| IF LPARAN comp_exp RPARAN LBRACE statements RBRACE ELSE LBRACE statements RBRACE	(Ast.Ifelse(comp_exp,statements1,statements2))
+	| FOR LPARAN ID ASSIGN arith_exp SEMICOLON comp_exp SEMICOLON ID ASSIGN arith_exp RPARAN LBRACE statements RBRACE   (Ast.For((ID,arith_exp1),comp_exp,(ID,arith_exp2),statements))
 	| INT ID ASSIGN arith_exp SEMICOLON							(Ast.Assign(ID,arith_exp))
 (*	| STRING ID ASSIGN STRING_CONST SEMICOLON                   (Ast.Assign(ID,))           *)
 	| ID ASSIGN arith_exp SEMICOLON							(Ast.Assign(ID,arith_exp))
@@ -116,7 +118,7 @@ arith_exp : arith_exp PLUS arith_exp				(Ast.plus(arith_exp1,arith_exp2))
 
 exp : ID							(Ast.Id(ID))
     | INT_CONST							(Ast.Const(INT_CONST))
-
+                            
 
 
 	

@@ -29,11 +29,12 @@ datatype Expr  = Const of int
 datatype Stm = Var of string 
 		| Exp_abs of Expr               (*doubt*)
 *)
-
+type assign = string * Expr;
 datatype Stms = If of Expr * Stms list
 		| Ifelse of Expr*Stms list*Stms list
 		| While of Expr * Stms list
 		| Assign of string * Expr
+		| For of assign * Expr * assign * Stms list
 		
 
 fun plus (x,y) = Bin_Op (x, Plus, y)
