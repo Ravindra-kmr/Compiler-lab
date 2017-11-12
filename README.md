@@ -10,7 +10,8 @@ How to run:
 1. $ cd Compiler-lab/parse
 2. $ sml
 3. -CM.make("sources.cm");
-4. -Parser.parse "test";
+4. -Control.Print.printDepth:=20;
+5. -Parser.parse "test";
 
 FIles:
 c_lex.lex - lexer file for a subset of c language in ml-lex.

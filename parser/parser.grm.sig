@@ -6,6 +6,7 @@ val ASSIGN:  'a * 'a -> (svalue,'a) token
 val NIL:  'a * 'a -> (svalue,'a) token
 val ELSE:  'a * 'a -> (svalue,'a) token
 val IF:  'a * 'a -> (svalue,'a) token
+val FOR:  'a * 'a -> (svalue,'a) token
 val WHILE:  'a * 'a -> (svalue,'a) token
 val SEMICOLON:  'a * 'a -> (svalue,'a) token
 val RPARAN:  'a * 'a -> (svalue,'a) token
